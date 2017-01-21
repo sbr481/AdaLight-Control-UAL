@@ -20,7 +20,7 @@ namespace Prototipo2
             //crear Serial Port
             ArduinoPort = new System.IO.Ports.SerialPort();
             ArduinoPort.PortName = "COM3"; //sustituir por vuestro 
-            ArduinoPort.BaudRate = 115200;
+            ArduinoPort.BaudRate = 115200; //
             ArduinoPort.Open();
 
             //crear Serial Port

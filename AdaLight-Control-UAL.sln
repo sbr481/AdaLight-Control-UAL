@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prototipo2", "Prototipo2\Prototipo2.csproj", "{5FAEB95F-035E-4955-A785-A5A303D331A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdaLight-Control", "Prototipo2\AdaLight-Control.csproj", "{5FAEB95F-035E-4955-A785-A5A303D331A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
