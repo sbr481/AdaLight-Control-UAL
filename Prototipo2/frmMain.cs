@@ -108,17 +108,17 @@ namespace Prototipo2
         private void btColorTira_Click(object sender, EventArgs e)
         {
 
-            if (!tbColorLED.Text.Equals(""))
-            {
+            //if (!tbColorLED.Text.Equals(""))
+            //{
                 serialData[0] = 0x41;                              // Magic word
                 serialData[1] = 0x64;
                 serialData[2] = 0x61;
-
-                int t = num_leds - 1;
-                
-                serialData[3] = (8 - 1) >> 8;   // LED count high byte
-                serialData[4] = (8 - 1) & 0xff; // LED count low byte
+                           
+                serialData[3] = (byte)((num_leds - 1) >> 8);   // LED count high byte
+                serialData[4] = (byte)((num_leds - 1) & 0xff); // LED count low byte
                 serialData[5] = (byte)(serialData[3] ^ serialData[4] ^ 0x55); // Checksum
+
+                //MessageBox.Show("1.La longitud del buffer en posiciones es: " +serialData.Length);
 
                 for (int i = 6; i < serialData.Length; i++)
                 {
@@ -127,8 +127,8 @@ namespace Prototipo2
                     serialData[i++] = b_global;
                 }
                 ArduinoPort.Write(serialData, 0, serialData.Length);
-            }
-
+            //}
+            //MessageBox.Show("2.La longitud del buffer en posiciones es: " + serialData.Length);
         }
 
 
