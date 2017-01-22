@@ -13,15 +13,25 @@ namespace Prototipo2
     public partial class frmMain : Form
     {
         System.IO.Ports.SerialPort ArduinoPort;
+        static int num_leds = 0;
+        byte[] serialData = new byte[6+(num_leds*3)];
+        string[] portsAvailable = System.IO.Ports.SerialPort.GetPortNames();
+        byte r_global, g_global, b_global, brigth_global;
+        byte r_led, g_led, b_led, bright_led;
 
         public frmMain()
         {
             InitializeComponent();
             //crear Serial Port
             ArduinoPort = new System.IO.Ports.SerialPort();
-            ArduinoPort.PortName = "COM3"; //sustituir por vuestro 
-            ArduinoPort.BaudRate = 115200; //
-            ArduinoPort.Open();
+            // ArduinoPort.PortName = "COM3"; //sustituir por vuestro 
+            //ArduinoPort.BaudRate = 115200; //
+
+        //    if (portsAvailable.Contains(tbPuerto.Text))
+         //   {
+          //      ArduinoPort.Open();
+           // }
+            
 
             //crear Serial Port
             //            ArduinoPort = new System.IO.Ports.SerialPort();
@@ -32,14 +42,15 @@ namespace Prototipo2
             //vincular eventos
             this.FormClosing += FrmMain_FormClosing;
             this.btNLEDS.Click += btNLEDS_Click;
-            this.btPuerto.Click += btPuerto_Click;
+            this.btConnect.Click += btConnect_Click;
             this.tbColorTira.Click += tbColorTira_Click;
             this.tbColorLED.Click += tbColorLED_Click;
+
         }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-
+            cbPuerto.DataSource = portsAvailable;
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -49,170 +60,63 @@ namespace Prototipo2
         }
 
 
-        private void btPuerto_Click(object sender, EventArgs e)
+        private void btConnect_Click(object sender, EventArgs e)
         {
 
-            byte[] serialData = new byte[31];
-
-            serialData[0] = 0x41;                              // Magic word
-            serialData[1] = 0x64;
-            serialData[2] = 0x61;
-
-
-            serialData[3] = (byte)((8 - 1) >> 8);   // LED count high byte
-            serialData[4] = (byte)((8 - 1) & 0xff); // LED count low byte
-            serialData[5] = (byte)(serialData[3] ^ serialData[4] ^ 0x55); // Checksum
-
-            /*
-                        // A special header / magic word is expected by the corresponding LED
-                        // streaming code running on the Arduino.  This only needs to be initialized
-                        // once (not in draw() loop) because the number of LEDs remains constant:
-                        serialData[0] = 'A';                              // Magic word
-                        serialData[1] = 'd';
-                        serialData[2] = 'a';
-                        serialData[3] = (byte)((leds.length - 1) >> 8);   // LED count high byte
-                        serialData[4] = (byte)((leds.length - 1) & 0xff); // LED count low byte
-                        serialData[5] = (byte)(serialData[3] ^ serialData[4] ^ 0x55); // Checksum
-
-            */
-
-
-
-
-
-
-            /*            serialData[6] = 0x56;
-                        serialData[7] = 0x00;
-                        serialData[8] = 0x00;
-                        serialData[9] = 0x2f;
-                        serialData[10] = 0x4e;
-                        serialData[11] = 0x4a;
-                        serialData[12] = 0x4f;
-                        serialData[13] = 0x5a;
-                        serialData[14] = 0x5a;
-                        serialData[15] = 0x5a;
-                        serialData[16] = 0x2d;
-                        serialData[17] = 0x2c;
-                        serialData[18] = 0x2c;
-                        serialData[19] = 0x4a;
-                        serialData[20] = 0x3f;
-                        serialData[21] = 0x49;
-                        serialData[22] = 0x58;
-                        serialData[23] = 0x57;
-                        serialData[24] = 0x00;
-                        serialData[25] = 0x00;
-                        serialData[26] = 0x00;
-                        serialData[27] = 0x00;
-                        serialData[28] = 0x00;
-                        serialData[29] = 0x00;
-                        serialData[30] = 0x00;
-            */
-
-
-
-
-            serialData[6] = 0x52;
-                        serialData[7] = 0x31;
-                        serialData[8] = 0x32;
-                        serialData[9] = 0x2f;
-                        serialData[10] = 0x4e;
-                        serialData[11] = 0x4a;
-                        serialData[12] = 0x4f;
-                        serialData[13] = 0x5a;
-                        serialData[14] = 0x5a;
-                        serialData[15] = 0x5a;
-                        serialData[16] = 0x2d;
-                        serialData[17] = 0x2c;
-                        serialData[18] = 0x2c;
-                        serialData[19] = 0x4a;
-                        serialData[20] = 0x3f;
-                        serialData[21] = 0x00;
-                        serialData[22] = 0x00;
-                        serialData[23] = 0x57;
-                        serialData[24] = 0x59;
-                        serialData[25] = 0x4c;
-                        serialData[26] = 0x4a;
-                        serialData[27] = 0x4d;
-                        serialData[28] = 0x58;
-                        serialData[29] = 0x57;
-                        serialData[30] = 0x5a;
-            
-
-
-
-
-            ArduinoPort.Write(serialData,0,31);
+            if (ArduinoPort.IsOpen) ArduinoPort.Close();
+            // ArduinoPort.PortName = cbPuerto.Text;
+            if (!cbPuerto.Text.Equals(""))
+            {
+                ArduinoPort.PortName = cbPuerto.Text;
+                ArduinoPort.BaudRate = 115200;
+                ArduinoPort.Open();
+            }else
+            {
+                //mostrar alerta de que no hay ningun puerto serie en el sistema
+            }
+                
+            //ArduinoPort.Write(serialData,0,serialData.Length);
             //            ArduinoPort.Write("b");
         }
 
         private void btNLEDS_Click(object sender, EventArgs e)
         {
 
+            byte[] serialData2 = serialData;
 
+            int n_led = 6 + (int.Parse(cbSelecLED.Text) * 3);
 
+            serialData2[n_led] = r_led;
+            serialData2[n_led + 1] = g_led;
+            serialData2[n_led + 2] = b_led;
 
+            ArduinoPort.Write(serialData2, 0, serialData2.Length);
 
+            serialData = serialData2;
 
-
-            byte[] serialData = new byte[31];
-
-            serialData[0] = 0x41;                              // Magic word
-            serialData[1] = 0x64;
-            serialData[2] = 0x61;
-
-
-            serialData[3] = (8 - 1) >> 8;   // LED count high byte
-            serialData[4] = (8 - 1) & 0xff; // LED count low byte
-            serialData[5] = (byte)(serialData[3] ^ serialData[4] ^ 0x55); // Checksum
-
-
-            
-            serialData[6] = 0x52;
-            serialData[7] = 0x31;
-            serialData[8] = 0x32;
-            serialData[9] = 0x2f;
-            serialData[10] = 0x4e;
-            serialData[11] = 0x4a;
-            serialData[12] = 0x4f;
-            serialData[13] = 0x5a;
-            serialData[14] = 0x5a;
-            serialData[15] = 0x5a;
-            serialData[16] = 0x2d;
-            serialData[17] = 0x2c;
-            serialData[18] = 0x2c;
-            serialData[19] = 0x4a;
-            serialData[20] = 0x3f;
-            serialData[21] = 0x49;
-            serialData[22] = 0x58;
-            serialData[23] = 0x57;
-            serialData[24] = 0x59;
-            serialData[25] = 0x4c;
-            serialData[26] = 0x4a;
-            serialData[27] = 0x4d;
-            serialData[28] = 0x58;
-            serialData[29] = 0x57;
-            serialData[30] = 0x5a;
-
-
-
-
-
-            ArduinoPort.Write(serialData, 0, 31);
-
-
-
-
-
-
-
-
-
-
-            //            ArduinoPort.Write("a");
         }
 
         private void btColorTira_Click(object sender, EventArgs e)
         {
+
+            if (!tbColorLED.Text.Equals(""))
+            {
+                serialData[0] = 0x41;                              // Magic word
+                serialData[1] = 0x64;
+                serialData[2] = 0x61;
+                
+                serialData[3] = (8 - 1) >> 8;   // LED count high byte
+                serialData[4] = (8 - 1) & 0xff; // LED count low byte
+                serialData[5] = (byte)(serialData[3] ^ serialData[4] ^ 0x55); // Checksum
+
+                for (int i = 6; i < serialData.Length; i++)
+                {
+                    serialData[i] = r_global;
+                    serialData[i++] = g_global;
+                    serialData[i++] = b_global;
+                }
+                ArduinoPort.Write(serialData, 0, serialData.Length);
+            }
 
         }
 
@@ -232,6 +136,12 @@ namespace Prototipo2
             {
                 this.tbColorLED.BackColor = DialogColorLED.Color;
                 this.lbRGBLED.Text = "R = " + DialogColorLED.Color.R + ", G = " + DialogColorLED.Color.G + ", B = " + DialogColorLED.Color.B;
+                r_led = DialogColorLED.Color.R;
+                g_led = DialogColorLED.Color.G;
+                b_led = DialogColorLED.Color.B;
+                //bright_led = DialogColorLED.Color.GetBrightness();
+
+               
             }
         }
 
@@ -252,6 +162,9 @@ namespace Prototipo2
                 this.tbColorTira.BackColor = DialogColorTira.Color;
 //              tbColorTira.Text = "R = " + MyDialog.Color.R + ", G = " + MyDialog.Color.G + ", B = " + MyDialog.Color.B;
                 this.lbRGBTira.Text = "R = " + DialogColorTira.Color.R + ", G = " + DialogColorTira.Color.G + ", B = " + DialogColorTira.Color.B + "Lum" + DialogColorTira.Color.GetBrightness();
+                r_global = DialogColorTira.Color.R;
+                g_global = DialogColorTira.Color.G;
+                b_global = DialogColorTira.Color.B;
             }
 
         }
@@ -261,8 +174,13 @@ namespace Prototipo2
 
         }
 
-        private void tbPuerto_TextChanged(object sender, EventArgs e)
+        
+
+        private void tbNLEDS_TextChanged(object sender, EventArgs e)
         {
+
+            num_leds = int.Parse(tbNLEDS.Text);
+            serialData = new byte[6+(num_leds*3)];
 
         }
 

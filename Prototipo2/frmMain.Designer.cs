@@ -30,12 +30,11 @@ namespace Prototipo2
         /// </summary>
         private void InitializeComponent()
         {
-            this.btPuerto = new System.Windows.Forms.Button();
+            this.btConnect = new System.Windows.Forms.Button();
             this.btNLEDS = new System.Windows.Forms.Button();
             this.cbSelecLED = new System.Windows.Forms.ComboBox();
             this.btColorTira = new System.Windows.Forms.Button();
             this.tbNLEDS = new System.Windows.Forms.TextBox();
-            this.tbPuerto = new System.Windows.Forms.TextBox();
             this.lbNLEDS = new System.Windows.Forms.Label();
             this.lbPuerto = new System.Windows.Forms.Label();
             this.lbColorTira = new System.Windows.Forms.Label();
@@ -46,23 +45,26 @@ namespace Prototipo2
             this.tbColorTira = new System.Windows.Forms.TextBox();
             this.tbColorLED = new System.Windows.Forms.TextBox();
             this.lbRGBLED = new System.Windows.Forms.Label();
+            this.cbPuerto = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
-            // btPuerto
+            // btConnect
             // 
-            this.btPuerto.Location = new System.Drawing.Point(683, 362);
-            this.btPuerto.Name = "btPuerto";
-            this.btPuerto.Size = new System.Drawing.Size(89, 23);
-            this.btPuerto.TabIndex = 0;
-            this.btPuerto.Text = "Puerto";
-            this.btPuerto.UseVisualStyleBackColor = true;
-            this.btPuerto.Click += new System.EventHandler(this.btPuerto_Click);
+            this.btConnect.Location = new System.Drawing.Point(387, 26);
+            this.btConnect.Margin = new System.Windows.Forms.Padding(2);
+            this.btConnect.Name = "btConnect";
+            this.btConnect.Size = new System.Drawing.Size(67, 19);
+            this.btConnect.TabIndex = 0;
+            this.btConnect.Text = "Conectar";
+            this.btConnect.UseVisualStyleBackColor = true;
+            this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
             // 
             // btNLEDS
             // 
-            this.btNLEDS.Location = new System.Drawing.Point(683, 386);
+            this.btNLEDS.Location = new System.Drawing.Point(387, 164);
+            this.btNLEDS.Margin = new System.Windows.Forms.Padding(2);
             this.btNLEDS.Name = "btNLEDS";
-            this.btNLEDS.Size = new System.Drawing.Size(89, 23);
+            this.btNLEDS.Size = new System.Drawing.Size(67, 19);
             this.btNLEDS.TabIndex = 1;
             this.btNLEDS.Text = "N LEDS";
             this.btNLEDS.UseVisualStyleBackColor = true;
@@ -71,20 +73,19 @@ namespace Prototipo2
             // cbSelecLED
             // 
             this.cbSelecLED.FormattingEnabled = true;
-            this.cbSelecLED.Location = new System.Drawing.Point(119, 290);
+            this.cbSelecLED.Location = new System.Drawing.Point(89, 162);
+            this.cbSelecLED.Margin = new System.Windows.Forms.Padding(2);
             this.cbSelecLED.Name = "cbSelecLED";
-            this.cbSelecLED.Size = new System.Drawing.Size(121, 24);
-/*            int numLEDs = Int32.Parse(tbNLEDS.Text);
-            this.cbSelecLED.TabIndex = Int32.Parse(tbNLEDS.Text);
-*/          this.cbSelecLED.TabIndex = 2;
+            this.cbSelecLED.Size = new System.Drawing.Size(92, 21);
+            this.cbSelecLED.TabIndex = 2;
             this.cbSelecLED.SelectedIndexChanged += new System.EventHandler(this.cbSelecLED_SelectedIndexChanged);
-//            this.cbSelecLED.It
             // 
             // btColorTira
             // 
-            this.btColorTira.Location = new System.Drawing.Point(683, 413);
+            this.btColorTira.Location = new System.Drawing.Point(387, 74);
+            this.btColorTira.Margin = new System.Windows.Forms.Padding(2);
             this.btColorTira.Name = "btColorTira";
-            this.btColorTira.Size = new System.Drawing.Size(89, 23);
+            this.btColorTira.Size = new System.Drawing.Size(67, 19);
             this.btColorTira.TabIndex = 3;
             this.btColorTira.Text = "Color Tira";
             this.btColorTira.UseVisualStyleBackColor = true;
@@ -92,102 +93,112 @@ namespace Prototipo2
             // 
             // tbNLEDS
             // 
-            this.tbNLEDS.Location = new System.Drawing.Point(176, 66);
+            this.tbNLEDS.Location = new System.Drawing.Point(132, 54);
+            this.tbNLEDS.Margin = new System.Windows.Forms.Padding(2);
             this.tbNLEDS.Name = "tbNLEDS";
-            this.tbNLEDS.Size = new System.Drawing.Size(59, 22);
+            this.tbNLEDS.Size = new System.Drawing.Size(45, 20);
             this.tbNLEDS.TabIndex = 5;
-//            this.tbNLEDS.TextChanged += new System.EventHandler(this.tbNLEDS_TextChanged);
-//            this.tbNLEDS.Text = "0";
-            // tbPuerto
-            // 
-            this.tbPuerto.Location = new System.Drawing.Point(176, 36);
-            this.tbPuerto.Name = "tbPuerto";
-            this.tbPuerto.Size = new System.Drawing.Size(59, 22);
-            this.tbPuerto.TabIndex = 6;
-            this.tbPuerto.TextChanged += new System.EventHandler(this.tbPuerto_TextChanged);
             // 
             // lbNLEDS
             // 
             this.lbNLEDS.AutoSize = true;
-            this.lbNLEDS.Location = new System.Drawing.Point(78, 69);
+            this.lbNLEDS.Location = new System.Drawing.Point(58, 56);
+            this.lbNLEDS.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbNLEDS.Name = "lbNLEDS";
-            this.lbNLEDS.Size = new System.Drawing.Size(63, 17);
+            this.lbNLEDS.Size = new System.Drawing.Size(50, 13);
             this.lbNLEDS.TabIndex = 8;
             this.lbNLEDS.Text = "Nº LEDS";
             // 
             // lbPuerto
             // 
             this.lbPuerto.AutoSize = true;
-            this.lbPuerto.Location = new System.Drawing.Point(78, 39);
+            this.lbPuerto.Location = new System.Drawing.Point(58, 32);
+            this.lbPuerto.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbPuerto.Name = "lbPuerto";
-            this.lbPuerto.Size = new System.Drawing.Size(50, 17);
+            this.lbPuerto.Size = new System.Drawing.Size(38, 13);
             this.lbPuerto.TabIndex = 9;
             this.lbPuerto.Text = "Puerto";
             // 
             // lbColorTira
             // 
             this.lbColorTira.AutoSize = true;
-            this.lbColorTira.Location = new System.Drawing.Point(78, 99);
+            this.lbColorTira.Location = new System.Drawing.Point(58, 80);
+            this.lbColorTira.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbColorTira.Name = "lbColorTira";
-            this.lbColorTira.Size = new System.Drawing.Size(70, 17);
+            this.lbColorTira.Size = new System.Drawing.Size(52, 13);
             this.lbColorTira.TabIndex = 10;
             this.lbColorTira.Text = "Color Tira";
             // 
             // lbRGBTira
             // 
             this.lbRGBTira.AutoSize = true;
-            this.lbRGBTira.Location = new System.Drawing.Point(204, 99);
+            this.lbRGBTira.Location = new System.Drawing.Point(153, 80);
+            this.lbRGBTira.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbRGBTira.Name = "lbRGBTira";
-            this.lbRGBTira.Size = new System.Drawing.Size(41, 17);
+            this.lbRGBTira.Size = new System.Drawing.Size(33, 13);
             this.lbRGBTira.TabIndex = 11;
             this.lbRGBTira.Text = "black";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(78, 293);
+            this.label1.Location = new System.Drawing.Point(58, 164);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 17);
+            this.label1.Size = new System.Drawing.Size(28, 13);
             this.label1.TabIndex = 12;
             this.label1.Text = "LED";
             // 
             // lbColorLED
             // 
             this.lbColorLED.AutoSize = true;
-            this.lbColorLED.Location = new System.Drawing.Point(246, 293);
+            this.lbColorLED.Location = new System.Drawing.Point(184, 164);
+            this.lbColorLED.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbColorLED.Name = "lbColorLED";
-            this.lbColorLED.Size = new System.Drawing.Size(41, 17);
+            this.lbColorLED.Size = new System.Drawing.Size(31, 13);
             this.lbColorLED.TabIndex = 13;
             this.lbColorLED.Text = "Color";
             // 
             // tbColorTira
             // 
-            this.tbColorTira.Location = new System.Drawing.Point(176, 96);
+            this.tbColorTira.Location = new System.Drawing.Point(132, 78);
+            this.tbColorTira.Margin = new System.Windows.Forms.Padding(2);
             this.tbColorTira.Name = "tbColorTira";
-            this.tbColorTira.Size = new System.Drawing.Size(22, 22);
+            this.tbColorTira.Size = new System.Drawing.Size(18, 20);
             this.tbColorTira.TabIndex = 14;
             // 
             // tbColorLED
             // 
-            this.tbColorLED.Location = new System.Drawing.Point(293, 292);
+            this.tbColorLED.Location = new System.Drawing.Point(220, 163);
+            this.tbColorLED.Margin = new System.Windows.Forms.Padding(2);
             this.tbColorLED.Name = "tbColorLED";
-            this.tbColorLED.Size = new System.Drawing.Size(22, 22);
+            this.tbColorLED.Size = new System.Drawing.Size(18, 20);
             this.tbColorLED.TabIndex = 15;
             // 
             // lbRGBLED
             // 
             this.lbRGBLED.AutoSize = true;
-            this.lbRGBLED.Location = new System.Drawing.Point(321, 295);
+            this.lbRGBLED.Location = new System.Drawing.Point(241, 166);
+            this.lbRGBLED.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbRGBLED.Name = "lbRGBLED";
-            this.lbRGBLED.Size = new System.Drawing.Size(40, 17);
+            this.lbRGBLED.Size = new System.Drawing.Size(32, 13);
             this.lbRGBLED.TabIndex = 16;
             this.lbRGBLED.Text = "white";
             // 
+            // cbPuerto
+            // 
+            this.cbPuerto.FormattingEnabled = true;
+            this.cbPuerto.Location = new System.Drawing.Point(132, 29);
+            this.cbPuerto.Name = "cbPuerto";
+            this.cbPuerto.Size = new System.Drawing.Size(121, 21);
+            this.cbPuerto.TabIndex = 17;
+            // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 447);
+            this.ClientSize = new System.Drawing.Size(535, 241);
+            this.Controls.Add(this.cbPuerto);
             this.Controls.Add(this.lbRGBLED);
             this.Controls.Add(this.tbColorLED);
             this.Controls.Add(this.tbColorTira);
@@ -197,14 +208,14 @@ namespace Prototipo2
             this.Controls.Add(this.lbColorTira);
             this.Controls.Add(this.lbPuerto);
             this.Controls.Add(this.lbNLEDS);
-            this.Controls.Add(this.tbPuerto);
             this.Controls.Add(this.tbNLEDS);
             this.Controls.Add(this.btColorTira);
             this.Controls.Add(this.cbSelecLED);
             this.Controls.Add(this.btNLEDS);
-            this.Controls.Add(this.btPuerto);
+            this.Controls.Add(this.btConnect);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmMain";
-            this.Text = "frmMain";
+            this.Text = "AdaLight-Control";
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -213,12 +224,11 @@ namespace Prototipo2
 
         #endregion
 
-        private System.Windows.Forms.Button btPuerto;
+        private System.Windows.Forms.Button btConnect;
         private System.Windows.Forms.Button btNLEDS;
         private System.Windows.Forms.ComboBox cbSelecLED;
         private System.Windows.Forms.Button btColorTira;
         private System.Windows.Forms.TextBox tbNLEDS;
-        private System.Windows.Forms.TextBox tbPuerto;
         private System.Windows.Forms.Label lbNLEDS;
         private System.Windows.Forms.Label lbPuerto;
         private System.Windows.Forms.Label lbColorTira;
@@ -229,6 +239,7 @@ namespace Prototipo2
         private System.Windows.Forms.TextBox tbColorTira;
         private System.Windows.Forms.TextBox tbColorLED;
         private System.Windows.Forms.Label lbRGBLED;
+        private System.Windows.Forms.ComboBox cbPuerto;
     }
 }
 
