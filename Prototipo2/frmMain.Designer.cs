@@ -57,7 +57,7 @@ namespace Prototipo2
             this.btConnect.TabIndex = 0;
             this.btConnect.Text = "Conectar";
             this.btConnect.UseVisualStyleBackColor = true;
-            this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
+//            this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
             // 
             // btNLEDS
             // 
