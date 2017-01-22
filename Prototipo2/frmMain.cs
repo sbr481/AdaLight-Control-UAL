@@ -18,10 +18,14 @@ namespace Prototipo2
         string[] portsAvailable = System.IO.Ports.SerialPort.GetPortNames();
         byte r_global, g_global, b_global, brigth_global;
         byte r_led, g_led, b_led, bright_led;
+        int[] array_numeros = null;
 
         public frmMain()
         {
             InitializeComponent();
+
+            tbNLEDS.Text = "0";
+            cbSelecLED.DataSource = array_numeros;
             //crear Serial Port
             ArduinoPort = new System.IO.Ports.SerialPort();
             // ArduinoPort.PortName = "COM3"; //sustituir por vuestro 
@@ -45,6 +49,7 @@ namespace Prototipo2
             this.btConnect.Click += btConnect_Click;
             this.tbColorTira.Click += tbColorTira_Click;
             this.tbColorLED.Click += tbColorLED_Click;
+            this.tbNLEDS.Leave += tbNLEDS_Leave;
 
         }
 
@@ -57,6 +62,7 @@ namespace Prototipo2
         {
             //cerrar puerto
             if (ArduinoPort.IsOpen) ArduinoPort.Close();
+            MessageBox.Show("Conexion cerrada con Arduino. Hasta pronto!!!");
         }
 
 
@@ -67,12 +73,15 @@ namespace Prototipo2
             // ArduinoPort.PortName = cbPuerto.Text;
             if (!cbPuerto.Text.Equals(""))
             {
+                MessageBox.Show("Conectando a Arduino...");
                 ArduinoPort.PortName = cbPuerto.Text;
                 ArduinoPort.BaudRate = 115200;
                 ArduinoPort.Open();
+                MessageBox.Show("Conectado al puerto: " +ArduinoPort.PortName);
             }else
             {
                 //mostrar alerta de que no hay ningun puerto serie en el sistema
+                MessageBox.Show("No hay puerto seleccionado.");
             }
                 
             //ArduinoPort.Write(serialData,0,serialData.Length);
@@ -176,11 +185,19 @@ namespace Prototipo2
 
         
 
-        private void tbNLEDS_TextChanged(object sender, EventArgs e)
+        private void tbNLEDS_Leave(object sender, EventArgs e)
         {
 
             num_leds = int.Parse(tbNLEDS.Text);
             serialData = new byte[6+(num_leds*3)];
+            array_numeros = new int[num_leds];
+
+            for(int i=0; i < num_leds; i++)
+            {
+                array_numeros[i] = i;
+            }
+            MessageBox.Show("Numero de leds actualizado.");
+            cbSelecLED.Refresh();
 
         }
 
