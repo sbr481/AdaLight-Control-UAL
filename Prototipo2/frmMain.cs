@@ -18,7 +18,7 @@ namespace Prototipo2
         string[] portsAvailable = System.IO.Ports.SerialPort.GetPortNames();
         byte r_global, g_global, b_global, brigth_global;
         byte r_led, g_led, b_led, bright_led;
-        int[] array_numeros = null;
+        string[] array_numeros = null;
 
         public frmMain()
         {
@@ -113,6 +113,8 @@ namespace Prototipo2
                 serialData[0] = 0x41;                              // Magic word
                 serialData[1] = 0x64;
                 serialData[2] = 0x61;
+
+                int t = num_leds - 1;
                 
                 serialData[3] = (8 - 1) >> 8;   // LED count high byte
                 serialData[4] = (8 - 1) & 0xff; // LED count low byte
@@ -190,14 +192,14 @@ namespace Prototipo2
 
             num_leds = int.Parse(tbNLEDS.Text);
             serialData = new byte[6+(num_leds*3)];
-            array_numeros = new int[num_leds];
+            array_numeros = new string[num_leds];
 
             for(int i=0; i < num_leds; i++)
             {
-                array_numeros[i] = i;
+                array_numeros[i] = i.ToString();
             }
             MessageBox.Show("Numero de leds actualizado.");
-            cbSelecLED.Refresh();
+            cbSelecLED.DataSource = array_numeros;
 
         }
 
