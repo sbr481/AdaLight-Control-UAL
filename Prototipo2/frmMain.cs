@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+//Comentario 1
+//Comentario 2
+//Comentario generico
 namespace Prototipo2
 {
     public partial class frmMain : Form
