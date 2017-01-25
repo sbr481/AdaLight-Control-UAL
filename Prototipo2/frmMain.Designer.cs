@@ -50,10 +50,13 @@ namespace Prototipo2
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btColorswirl = new System.Windows.Forms.Button();
-            this.btCStop = new System.Windows.Forms.Button();
+            this.btColorswirlStop = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cswirlBgW = new System.ComponentModel.BackgroundWorker();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // btConnect
@@ -244,29 +247,47 @@ namespace Prototipo2
             // 
             // btColorswirl
             // 
-            this.btColorswirl.Location = new System.Drawing.Point(21, 280);
+            this.btColorswirl.Location = new System.Drawing.Point(6, 19);
             this.btColorswirl.Name = "btColorswirl";
             this.btColorswirl.Size = new System.Drawing.Size(75, 23);
             this.btColorswirl.TabIndex = 21;
             this.btColorswirl.Text = "Colorswirl";
             this.btColorswirl.UseVisualStyleBackColor = true;
             // 
-            // btCStop
+            // btColorswirlStop
             // 
-            this.btCStop.Location = new System.Drawing.Point(21, 322);
-            this.btCStop.Name = "btCStop";
-            this.btCStop.Size = new System.Drawing.Size(75, 23);
-            this.btCStop.TabIndex = 22;
-            this.btCStop.Text = "Stop";
-            this.btCStop.UseVisualStyleBackColor = true;
+            this.btColorswirlStop.Enabled = false;
+            this.btColorswirlStop.Location = new System.Drawing.Point(87, 19);
+            this.btColorswirlStop.Name = "btColorswirlStop";
+            this.btColorswirlStop.Size = new System.Drawing.Size(75, 23);
+            this.btColorswirlStop.TabIndex = 22;
+            this.btColorswirlStop.Text = "Stop";
+            this.btColorswirlStop.UseVisualStyleBackColor = true;
+            this.btColorswirlStop.Click += new System.EventHandler(this.btColorswirlStop_Click);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.btColorswirl);
+            this.groupBox4.Controls.Add(this.btColorswirlStop);
+            this.groupBox4.Location = new System.Drawing.Point(12, 268);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(291, 51);
+            this.groupBox4.TabIndex = 23;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Misc";
+            // 
+            // cswirlBgW
+            // 
+            this.cswirlBgW.WorkerReportsProgress = true;
+            this.cswirlBgW.WorkerSupportsCancellation = true;
+            this.cswirlBgW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.cswirlBgW_DoWork);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(323, 403);
-            this.Controls.Add(this.btCStop);
-            this.Controls.Add(this.btColorswirl);
+            this.ClientSize = new System.Drawing.Size(323, 332);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -280,6 +301,7 @@ namespace Prototipo2
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -306,7 +328,9 @@ namespace Prototipo2
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btColorswirl;
-        private System.Windows.Forms.Button btCStop;
+        private System.Windows.Forms.Button btColorswirlStop;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.ComponentModel.BackgroundWorker cswirlBgW;
     }
 }
 

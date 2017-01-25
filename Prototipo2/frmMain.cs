@@ -36,16 +36,16 @@ namespace Prototipo2
         byte[] buffer = new byte[6 + (num_leds * 3)];
         float sine1, sine2;
         int hue1, hue2, bright, lo, r, g, b;
-
-
+        int loopTime; //BgW TempAttrib
+        
         public frmMain()
         {
             InitializeComponent();
             
-            //Alpha Test - Correccion Gamma
-            //
-            //brightness = (int)(Math.Pow(0.5 + Math.Sin(sine) * 0.5, 3.0) * 255.0);
-
+            //Alpha Test - Gamma Correction
+            /*
+            brightness = (int)(Math.Pow(0.5 + Math.Sin(sine) * 0.5, 3.0) * 255.0);*/
+            
             //Beta Test - ColorCorrectionMod
             //Status: WORKING
             //
@@ -62,17 +62,18 @@ namespace Prototipo2
             cbSelecLED.DataSource = array_numeros;
             //Crear Serial Port
             ArduinoPort = new System.IO.Ports.SerialPort();
+
+            //Timer MyTimer = new Timer();
+
+            //Alpha Test - Port
+            /*
+            //Creating Serial Port
+            ArduinoPort = new System.IO.Ports.SerialPort();
+            ArduinoPort.PortName = "COM4";  //Replace with current port 
+            ArduinoPort.BaudRate = 9600;
+            ArduinoPort.Open();*/
             
-
-            //Alpha Test - Puerto
-            //
-            //Crear Serial Port
-            //            ArduinoPort = new System.IO.Ports.SerialPort();
-            //            ArduinoPort.PortName = "COM4";  //sustituir por vuestro 
-            //            ArduinoPort.BaudRate = 9600;
-            //            ArduinoPort.Open();
-
-            //Vinculacion eventos
+            //Event linking
             //
             this.FormClosing += FrmMain_FormClosing;
             this.btNLEDS.Click += btNLEDS_Click;
@@ -81,7 +82,16 @@ namespace Prototipo2
             this.tbColorLED.Click += tbColorLED_Click;
             this.tbNLEDS.Leave += tbNLEDS_Leave;
             this.btColorswirl.Click += btColorswirl_Click;
+            this.btColorswirlStop.Click += btColorswirlStop_Click;
 
+            //Colorswirl BackgroundWorker creation and event linking
+            //
+            cswirlBgW = new BackgroundWorker();
+            cswirlBgW.DoWork += new DoWorkEventHandler(cswirlBgW_DoWork);
+            cswirlBgW.ProgressChanged += new ProgressChangedEventHandler(cswirlBgW_ProgressChanged);
+            cswirlBgW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(cswirlBgW_RunWorkerCompleted);
+            cswirlBgW.WorkerSupportsCancellation = true;
+            
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -95,7 +105,6 @@ namespace Prototipo2
             if (ArduinoPort.IsOpen) ArduinoPort.Close();
             MessageBox.Show("Conexion cerrada con Arduino. Hasta pronto!!!");
         }
-
 
         private void btConnect_Click(object sender, EventArgs e)
         {
@@ -187,7 +196,6 @@ namespace Prototipo2
 
         }
 
-
         private void tbColorLED_Click(object sender, EventArgs e)
         {
             ColorDialog DialogColorLED = new ColorDialog();
@@ -246,7 +254,6 @@ namespace Prototipo2
 
             }
         }
-
 
         private void tbColorTira_Click(object sender, EventArgs e)
         {
@@ -322,21 +329,119 @@ namespace Prototipo2
 
         }
 
-        private void btColorswirl_Click(object sender, EventArgs e)
+        private void cbSelecLED_SelectedIndexChanged(object sender, EventArgs e)
         {
-            buffer[0] = (byte) 'A';                                // Magic word
-            buffer[1] = (byte) 'd';
-            buffer[2] = (byte) 'a';
-            buffer[3] = (byte) ((num_leds - 1) >> 8);            // LED count high byte
-            buffer[4] = (byte) ((num_leds - 1) & 0xff);          // LED count low byte
-            buffer[5] = (byte) (buffer[3] ^ buffer[4] ^ 0x55); // Checksum
 
-            sine1 = (float) 0.0;
+        }
+
+
+
+
+        //Colorswirl BackgroundWorker Methods
+        //------------------------------------------------------------------------------------------------
+        //
+        //StartAsync Button
+        private void btColorswirl_Click(System.Object sender, System.EventArgs e)
+        {
+            //BackgroundWorker Trigger
+            //
+            btColorswirl.Enabled = false;
+            btColorswirlStop.Enabled = true;
+            loopTime = 10;
+            cswirlBgW.RunWorkerAsync(loopTime);
+
+
+            buffer[0] = (byte)'A';                             // Magic word
+            buffer[1] = (byte)'d';
+            buffer[2] = (byte)'a';
+            buffer[3] = (byte)((num_leds - 1) >> 8);           // LED count high byte
+            buffer[4] = (byte)((num_leds - 1) & 0xff);         // LED count low byte
+            buffer[5] = (byte)(buffer[3] ^ buffer[4] ^ 0x55);  // Checksum
+
+            sine1 = (float)0.0;
             hue1 = 0;
-            //prev = second(); // For bandwidth statistics
+        }
+        //
+        //CancelAsync Button
+        private void btColorswirlStop_Click(object sender, EventArgs e)
+        {
+            cswirlBgW.CancelAsync();
+            btColorswirlStop.Enabled = false;
+        }
+        //
+        //BgW DoWork Async
+        private void cswirlBgW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // Get the BackgroundWorker that raised this event.
+            BackgroundWorker worker = sender as BackgroundWorker;
 
-            while (!btCStop.)
+            // Assign the result of the computation
+            // to the Result property of the DoWorkEventArgs
+            // object. This is will be available to the 
+            // RunWorkerCompleted eventhandler.
+            colorswirl(worker, e);
+        }
+        //
+        //RunWorkerCompleted: Colorswirl Completed
+        private void cswirlBgW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // First, handle the case where an exception was thrown.
+            if (e.Error != null)
             {
+                MessageBox.Show(e.Error.Message);
+            }
+            else if (e.Cancelled)
+            {
+                // Next, handle the case where the user canceled 
+                // the operation.
+                // Note that due to a race condition in 
+                // the DoWork event handler, the Cancelled
+                // flag may not have been set, even though
+                // CancelAsync was called.
+                MessageBox.Show("Colorswirl is stopped by the user.");
+               
+            }
+            else
+            {
+                // Finally, handle the case where the operation 
+                // succeeded.
+                MessageBox.Show("Colorswirl loop is over.");
+                
+            }
+
+            // Enable the Start button.
+            btColorswirl.Enabled = true;
+
+            // Disable the Cancel button.
+            btColorswirlStop.Enabled = false;
+
+        }
+        //
+        //BgW Event Handler: updates values during the task.
+        private void cswirlBgW_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //this.progressBar.Value = e.ProgressPercentage;
+        }
+        //
+        //Colorswirl Method
+        void colorswirl(BackgroundWorker worker, DoWorkEventArgs e) {
+
+            //Abort the operation if the user has canceled.
+            //Note that a call to CancelAsync may have set 
+            //CancellationPending to true just after the
+            //last invocation of this method exits, so this 
+            //code will not have the opportunity to set the 
+            //DoWorkEventArgs.Cancel flag to true. This means
+            //that RunWorkerCompletedEventArgs.Cancelled will
+            //not be set to true in your RunWorkerCompleted
+            //event handler. This is a race condition.
+            if (worker.CancellationPending)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                //Colorswirl effect
                 sine2 = sine1;
                 hue2 = hue1;
 
@@ -374,7 +479,7 @@ namespace Prototipo2
                         case 4:
                             r = lo;
                             g = 0;
-                            b = 255;
+                            b = 255;                                               
                             break;
                         default:
                             r = 255;
@@ -386,29 +491,31 @@ namespace Prototipo2
                     // Resulting hue is multiplied by brightness in the range of 0 to 255
                     // (0 = off, 255 = brightest).  Gamma corrrection (the 'pow' function
                     // here) adjusts the brightness to be more perceptually linear.
-                    int bright = (int)(Math.Pow(0.5 + Math.Sin(sine2) * 0.5, 2.8) * 255.0);
+                    bright = (int)(Math.Pow(0.5 + Math.Sin(sine2) * 0.5, 2.8) * 255.0);
                     buffer[i++] = (byte)((r * bright) / 255);
                     buffer[i++] = (byte)((g * bright) / 255);
                     buffer[i++] = (byte)((b * bright) / 255);
 
                     // Each pixel is slightly offset in both hue and brightness
                     hue2 += 40;
-                    sine2 += (float) 0.3;
+                    sine2 += (float)0.3;
                 }
 
                 // Slowly rotate hue and brightness in opposite directions
                 hue1 = (hue1 + 4) % 1536;
-                sine1 -= (float) .03;
+                sine1 -= (float).03;
 
+                //Write info to the port
                 ArduinoPort.Write(buffer, 0, buffer.Length);
 
+                //Repeat colorswirl if Async task is not cancelled
+                colorswirl(worker, e);
+
             }
-        }
 
-        private void cbSelecLED_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
         }
+        
 
     }
 
