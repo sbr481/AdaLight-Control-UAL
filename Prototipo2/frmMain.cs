@@ -372,9 +372,9 @@ namespace Prototipo2
             csRunning = false;
             for (int i = 6; i < buffer.Length;)
             {
-                    buffer[i++] = (byte)0;
-                    buffer[i++] = (byte)0;
-                    buffer[i++] = (byte)0;
+                    serialData[i] = buffer[i++] = (byte)0;
+                    serialData[i] = buffer[i++] = (byte)0;
+                    serialData[i] = buffer[i++] = (byte)0;
             }
             //Write info to the port
             ArduinoPort.Write(buffer, 0, buffer.Length);

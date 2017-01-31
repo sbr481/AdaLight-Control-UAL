@@ -30,6 +30,7 @@ namespace Prototipo2
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btConnect = new System.Windows.Forms.Button();
             this.btNLEDS = new System.Windows.Forms.Button();
             this.cbSelecLED = new System.Windows.Forms.ComboBox();
@@ -220,12 +221,15 @@ namespace Prototipo2
             // 
             // groupBox2
             // 
+            this.groupBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.groupBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.groupBox2.Controls.Add(this.btColorTira);
             this.groupBox2.Controls.Add(this.tbColorTira);
             this.groupBox2.Controls.Add(this.tbNLEDS);
             this.groupBox2.Controls.Add(this.lbRGBTira);
             this.groupBox2.Controls.Add(this.lbNLEDS);
             this.groupBox2.Controls.Add(this.lbColorTira);
+            this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox2.Location = new System.Drawing.Point(13, 84);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(290, 84);
@@ -291,9 +295,10 @@ namespace Prototipo2
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmMain";
-            this.Text = "AdaLight-Control";
+            this.Text = "Adalight Control [BETA]";
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
