@@ -37,6 +37,7 @@ namespace Prototipo2
         float sine1, sine2;
         int hue1, hue2, bright, lo, r, g, b;
         int loopTime; //BgW TempAttrib
+        bool csRunning;
         
         public frmMain()
         {
@@ -347,6 +348,7 @@ namespace Prototipo2
             //
             btColorswirl.Enabled = false;
             btColorswirlStop.Enabled = true;
+            csRunning = true;
             loopTime = 10;
             cswirlBgW.RunWorkerAsync(loopTime);
 
@@ -367,6 +369,15 @@ namespace Prototipo2
         {
             cswirlBgW.CancelAsync();
             btColorswirlStop.Enabled = false;
+            csRunning = false;
+            for (int i = 6; i < buffer.Length;)
+            {
+                    buffer[i++] = (byte)0;
+                    buffer[i++] = (byte)0;
+                    buffer[i++] = (byte)0;
+            }
+            //Write info to the port
+            ArduinoPort.Write(buffer, 0, buffer.Length);
         }
         //
         //BgW DoWork Async
@@ -403,8 +414,7 @@ namespace Prototipo2
             }
             else
             {
-                // Finally, handle the case where the operation 
-                // succeeded.
+                // Finally, handle the case where the operation succeeded.
                 MessageBox.Show("Colorswirl loop is over.");
                 
             }
@@ -424,7 +434,8 @@ namespace Prototipo2
         }
         //
         //Colorswirl Method
-        void colorswirl(BackgroundWorker worker, DoWorkEventArgs e) {
+        void colorswirl(BackgroundWorker worker, DoWorkEventArgs e)
+        {
 
             //Abort the operation if the user has canceled.
             //Note that a call to CancelAsync may have set 
@@ -441,81 +452,95 @@ namespace Prototipo2
             }
             else
             {
-                //Colorswirl effect
-                sine2 = sine1;
-                hue2 = hue1;
-
-                // Start at position 6, after the LED header/magic word
-                for (int i = 6; i < buffer.Length;)
+                //while (!e.Cancel)
+                while (csRunning)
                 {
-                    // Fixed-point hue-to-RGB conversion.  'hue2' is an integer in the
-                    // range of 0 to 1535, where 0 = red, 256 = yellow, 512 = green, etc.
-                    // The high byte (0-5) corresponds to the sextant within the color
-                    // wheel, while the low byte (0-255) is the fractional part between
-                    // the primary/secondary colors.
-                    lo = hue2 & 255;
-                    switch ((hue2 >> 8) % 6)
+                    //Colorswirl effect
+                    sine2 = sine1;
+                    hue2 = hue1;
+
+                    // Start at position 6, after the LED header/magic word
+                    for (int i = 6; i < buffer.Length;)
                     {
-                        case 0:
-                            r = 255;
-                            g = lo;
-                            b = 0;
-                            break;
-                        case 1:
-                            r = 255 - lo;
-                            g = 255;
-                            b = 0;
-                            break;
-                        case 2:
-                            r = 0;
-                            g = 255;
-                            b = lo;
-                            break;
-                        case 3:
-                            r = 0;
-                            g = 255 - lo;
-                            b = 255;
-                            break;
-                        case 4:
-                            r = lo;
-                            g = 0;
-                            b = 255;                                               
-                            break;
-                        default:
-                            r = 255;
-                            g = 0;
-                            b = 255 - lo;
-                            break;
+                        // Fixed-point hue-to-RGB conversion.  'hue2' is an integer in the
+                        // range of 0 to 1535, where 0 = red, 256 = yellow, 512 = green, etc.
+                        // The high byte (0-5) corresponds to the sextant within the color
+                        // wheel, while the low byte (0-255) is the fractional part between
+                        // the primary/secondary colors.
+                        lo = hue2 & 255;
+                        switch ((hue2 >> 8) % 6)
+                        {
+                            case 0:
+                                r = 255;
+                                g = lo;
+                                b = 0;
+                                break;
+                            case 1:
+                                r = 255 - lo;
+                                g = 255;
+                                b = 0;
+                                break;
+                            case 2:
+                                r = 0;
+                                g = 255;
+                                b = lo;
+                                break;
+                            case 3:
+                                r = 0;
+                                g = 255 - lo;
+                                b = 255;
+                                break;
+                            case 4:
+                                r = lo;
+                                g = 0;
+                                b = 255;
+                                break;
+                            default:
+                                r = 255;
+                                g = 0;
+                                b = 255 - lo;
+                                break;
+                        }
+
+                        // Resulting hue is multiplied by brightness in the range of 0 to 255
+                        // (0 = off, 255 = brightest).  Gamma corrrection (the 'pow' function
+                        // here) adjusts the brightness to be more perceptually linear.
+                        bright = (int)(Math.Pow(0.5 + Math.Sin(sine2) * 0.5, 2.8) * 255.0);
+                        buffer[i++] = (byte)((r * bright) / 255);
+                        buffer[i++] = (byte)((g * bright) / 255);
+                        buffer[i++] = (byte)((b * bright) / 255);
+
+                        // Each pixel is slightly offset in both hue and brightness
+                        hue2 += 40;
+                        sine2 += (float)0.3;
                     }
 
-                    // Resulting hue is multiplied by brightness in the range of 0 to 255
-                    // (0 = off, 255 = brightest).  Gamma corrrection (the 'pow' function
-                    // here) adjusts the brightness to be more perceptually linear.
-                    bright = (int)(Math.Pow(0.5 + Math.Sin(sine2) * 0.5, 2.8) * 255.0);
-                    buffer[i++] = (byte)((r * bright) / 255);
-                    buffer[i++] = (byte)((g * bright) / 255);
-                    buffer[i++] = (byte)((b * bright) / 255);
+                    // Slowly rotate hue and brightness in opposite directions
+                    hue1 = (hue1 + 4) % 1536;
+                    sine1 -= (float).03;
 
-                    // Each pixel is slightly offset in both hue and brightness
-                    hue2 += 40;
-                    sine2 += (float)0.3;
+                    //ExitCondition
+                    if (!csRunning)
+                    {
+                        for (int i = 6; i < buffer.Length;)
+                        {
+                            buffer[i++] = (byte)0;
+                            buffer[i++] = (byte)0;
+                            buffer[i++] = (byte)0;
+                        }
+                    }
+
+                    //Write info to the port
+                    ArduinoPort.Write(buffer, 0, buffer.Length);
+
+                    //RecursiveTest - Repeat colorswirl if Async task is not cancelled
+                    //colorswirl(worker, e);
+
                 }
-
-                // Slowly rotate hue and brightness in opposite directions
-                hue1 = (hue1 + 4) % 1536;
-                sine1 -= (float).03;
-
-                //Write info to the port
-                ArduinoPort.Write(buffer, 0, buffer.Length);
-
-                //Repeat colorswirl if Async task is not cancelled
-                colorswirl(worker, e);
 
             }
 
-
         }
-        
 
     }
 
